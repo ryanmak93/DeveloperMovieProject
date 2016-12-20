@@ -1,0 +1,19 @@
+﻿    tr {
+        border-bottom: 1px solid black;
+    }
+
+    th {
+        font-size: 24px;
+    }
+
+    td {
+        padding-left: 6px;
+        padding-right: 6px;
+        font-size: 20px;
+    }
+
+    .tdlist{
+        font-size: 16px;
+        margin:2px;
+        padding:0;
+    }

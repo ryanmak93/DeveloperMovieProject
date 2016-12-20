@@ -1,0 +1,13 @@
+﻿@model MovieApp.Models.Movie
+
+<h3>@Model.Title (@Model.Year)</h3>
+<div style="height:180px; overflow-y:scroll">
+
+    @foreach (var genre in Model.Genres.ToList())
+    {
+        <h3>@Html.ActionLink(@genre.Name, "Genre_All", "Movie", new { name = @genre.Name }, new { Class = "genreLink" })</h3>
+    }
+</div>
+<input type="button" value="Close" onclick="CloseDialog()" />
+
+<script src="@Url.Content("~/Scripts/Movie.js")" type="text/javascript"></script> 
