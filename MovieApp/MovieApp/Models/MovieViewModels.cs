@@ -5,7 +5,8 @@ using System.Web;
 
 namespace MovieApp.Models
 {
-    public class MovieViewModel
+    //For autocomplete (JSON does not like circular references caused by many-to-many relationships)
+    public class MovieViewModel 
     {
         public int MovieID;
         public string Title { get; set; }
@@ -21,29 +22,7 @@ namespace MovieApp.Models
         }
     }
 
-    public class MovieDatabase
-    {
-        public List<Movie> MovieList;
-        public List<Genre> GenreList;
-        public MovieDatabase() { }
-        public MovieDatabase(List<Movie> movielist, List<Genre> genrelist)
-        {
-            MovieList = movielist;
-            GenreList = genrelist;
-        }
-    }
-    public class GenreViewModel
-    {
-        public string Name;
-        public int GenreId;
-        public GenreViewModel() { }
-
-        public GenreViewModel(int id, string name)
-        {
-            Name = name;
-            GenreId = id;
-        }
-    }
+    //For assigning genres to movies on movie creation and editing
     public class AssignedGenre
     {
         public int id { get; set; }
@@ -51,6 +30,7 @@ namespace MovieApp.Models
         public bool Assigned { get; set; }
     }
 
+    //For assigning movies to genres on movie creation and editing
     public class AssignedMovie
     {
         public int id { get; set; }

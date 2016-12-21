@@ -11,3 +11,7 @@
 <br /><br />
 @Html.ActionLink("Manage Users", "UserManage", "Movie", null, new { Style = "font-size:20px;" })
 <br /><br />
+@Html.ActionLink("Reset and Populate Database", "ResetDatabase", "Movie",
+    new { onclick = "return confirm('This will erase all rows in database and replace it with test data. Would you like to continue?')", Style = "color:red;font-size:20px; " })
+
+

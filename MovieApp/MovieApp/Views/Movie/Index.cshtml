@@ -1,4 +1,4 @@
-﻿@model MovieApp.Models.MovieDatabase
+﻿@model ICollection<MovieApp.Models.Genre>
 
 @{
     ViewBag.Title = "Index";
@@ -11,10 +11,8 @@
 Search: <input type="search" id="movieSearch" name="movieId" />
 <br />
 <br />
-@*@foreach (var item in Model)*@
-@foreach (var item in Model.GenreList.OrderBy(x => x.Name)) {
-    @*<h3 id="genreLink" value="@item.Name">@item.Name</h3>*@
-    @Html.ActionLink(@item.Name, "Genre_All", "Movie", new { name = @item.Name }, new { Class = "genreLink", Style = "font-size:24px; color: red" })
+@foreach (var item in Model.OrderBy(g => g.Name)) {
+    @Html.ActionLink(@item.Name, "GenreAll", "Movie", new { name = @item.Name }, new { Class = "genreLink", Style = "font-size:24px; color: red" })
     <br />
     foreach (var movie in item.Movies.Reverse().Take(5))
     {
@@ -44,9 +42,7 @@ Search: <input type="search" id="movieSearch" name="movieId" />
 
 
     .ui-menu .ui-menu-item a {
-        background: white;
-        
+        background: white;        
     }
-
 
 </style>

@@ -1,4 +1,4 @@
-﻿
+﻿//Open modal
 var OpenDialog = function(url)
 {
     var options = { "backdrop": "static", keyboard: true };
@@ -18,16 +18,18 @@ var OpenDialog = function(url)
     });
 }
 
+//close modal
 var CloseDialog = function()
 {
     $("#dialog").modal('hide');
 }
 
+//click on movie title to open dialog
 $(".movielink").click(function () {
     OpenDialog("/Movie/GetMovie?movieId=" + this.id);
 });
 
-
+//autocomplete
 $('#movieSearch').autocomplete({
     source: function (request, response) {
         $.getJSON("/Movie/Search?search=" + request.term, function (data) {
@@ -44,31 +46,15 @@ $('#movieSearch').autocomplete({
     }
 });
 
-//var GetGenreMovies = function(genreId)
-//{
-//    var genremovies = ko.observableArray();
-//    $.ajax({
-//        url: "/Movie/GenreMovies?genreId=" + genreId,
-//        dataType: 'json',
-//        type: "POST",
-
-//        success: function (data) {
-//            genremovies = data;
-//            ko.applyBindings(genremovies);
-
-//        },
-//        error: function(d, textStatus, error) {
-//           alert("getJSON failed, status: " + textStatus + ", error: "+error)
-//        },
-//    });
-//    return genremovies;
-//};
-
+//confirm deletion
 $('[data-confirm]').click(function (e) {
     if (!confirm($(this).attr("data-confirm"))) {
         e.preventDefault();
     }
 });
+
+
+//field validation via jquery
 
 $("#createGenre, #editGenre").click(function (e) {
     var genreName = $("#genreName").val();
@@ -99,6 +85,11 @@ $("#editUser").click(function (e) {
         alert("Missing Username");
         e.preventDefault();
     }
+    else if(password.length > 0 && $.trim(password) == '')
+    {
+        alert("Missing Password");
+        e.preventDefault();
+    }
 });
 
 $("#createUser").click(function (e) {
@@ -108,7 +99,7 @@ $("#createUser").click(function (e) {
         alert("Missing Username");
         e.preventDefault();
     }
-    else if (password == '') {
+    else if ($.trim(password) == '') {
         alert("Missing password");
         e.preventDefault();
     }
