@@ -12,7 +12,7 @@ Search: <input type="search" id="movieSearch" name="movieId" />
 <br />
 <br />
 @foreach (var item in Model.OrderBy(g => g.Name)) {
-    @Html.ActionLink(@item.Name, "GenreAll", "Movie", new { name = @item.Name }, new { Class = "genreLink", Style = "font-size:24px; color: red" })
+    @Html.ActionLink(@item.Name, "All", "Genre", new { id = @item.Id }, new { Style = "font-size:24px; color: red" })
     <br />
     foreach (var movie in item.Movies.Reverse().Take(5))
     {

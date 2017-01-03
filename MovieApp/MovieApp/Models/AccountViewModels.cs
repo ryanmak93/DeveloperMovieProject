@@ -1,9 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace MovieApp.Models
 {
+    public class UserCreateViewModel
+    {
+        [Required]
+        [Remote("UserCheck", "Account", ErrorMessage = "Username already exists")]
+        public string Username { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+       
+    }
+
+    public class UserEditViewModel
+    {
+        public string Id;
+
+        [Required]
+        [Remote("UserCheck", "Account", AdditionalFields = "Id", ErrorMessage = "Username already exists")]
+        public string Username { get; set; }
+
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
+
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
@@ -88,7 +114,7 @@ namespace MovieApp.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -104,14 +130,14 @@ namespace MovieApp.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

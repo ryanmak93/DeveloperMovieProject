@@ -197,9 +197,21 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\MovieContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GenreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MovieController.cs" />
+    <Compile Include="Migrations\MovieContext\201612052147326_InitialCreate.cs" />
+    <Compile Include="Migrations\MovieContext\201612052147326_InitialCreate.Designer.cs">
+      <DependentUpon>201612052147326_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\MovieContext\201612280239585_AddValidation.cs" />
+    <Compile Include="Migrations\MovieContext\201612280239585_AddValidation.Designer.cs">
+      <DependentUpon>201612280239585_AddValidation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\MovieContext\Configuration.cs" />
+    <Compile Include="Models\CustomValidation.cs" />
+    <Compile Include="Models\TrimModelBinder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -269,8 +281,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Javascript\Genre.js" />
-    <Content Include="Javascript\Movie.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -303,6 +313,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Styles\Validation.css" />
     <Content Include="Styles\GetMovie.css" />
     <Content Include="Styles\Manage.css" />
     <Content Include="Web.config">
@@ -342,19 +353,19 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Movie\Index.cshtml" />
-    <Content Include="Views\Movie\GenreAll.cshtml" />
+    <Content Include="Views\Genre\All.cshtml" />
     <Content Include="Views\Movie\GetMovie.cshtml" />
     <Content Include="Views\Shared\_AdminPartial.cshtml" />
+    <Content Include="Views\Home\Manage.cshtml" />
     <Content Include="Views\Movie\Manage.cshtml" />
-    <Content Include="Views\Movie\MovieManage.cshtml" />
-    <Content Include="Views\Movie\MovieCreate.cshtml" />
-    <Content Include="Views\Movie\GenreManage.cshtml" />
-    <Content Include="Views\Movie\GenreCreate.cshtml" />
-    <Content Include="Views\Movie\GenreEdit.cshtml" />
-    <Content Include="Views\Movie\MovieEdit.cshtml" />
-    <Content Include="Views\Movie\UserManage.cshtml" />
-    <Content Include="Views\Movie\UserEdit.cshtml" />
-    <Content Include="Views\Movie\UserCreate.cshtml" />
+    <Content Include="Views\Movie\Create.cshtml" />
+    <Content Include="Views\Genre\Manage.cshtml" />
+    <Content Include="Views\Genre\Create.cshtml" />
+    <Content Include="Views\Genre\Edit.cshtml" />
+    <Content Include="Views\Movie\Edit.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -372,6 +383,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612200435569_InitialCreate1.resx">
       <DependentUpon>201612200435569_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\MovieContext\201612052147326_InitialCreate.resx">
+      <DependentUpon>201612052147326_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\MovieContext\201612280239585_AddValidation.resx">
+      <DependentUpon>201612280239585_AddValidation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MovieApp.Models;
+using System.Web.ModelBinding;
+using MovieApp.Controllers;
 
 namespace MovieApp
 {

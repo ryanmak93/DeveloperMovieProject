@@ -6,12 +6,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using System.Web.Mvc;
 
 namespace MovieApp.Models
 {
     public class Genre
     {
         public int Id { get; set; }
+
+        [Required]
+        [Remote("GenreCheck", "Genre", AdditionalFields = "Id", ErrorMessage = "Genre already exists")]
         public string Name { get; set; }
 
         public virtual ICollection<Movie> Movies { get; set; } 

@@ -16,7 +16,7 @@ var OpenDialog = function(url)
             $("#createdialog").modal('show');
         }
     });
-}
+};
 
 //close modal
 var CloseDialog = function()
@@ -26,7 +26,7 @@ var CloseDialog = function()
 
 //click on movie title to open dialog
 $(".movielink").click(function () {
-    OpenDialog("/Movie/GetMovie?movieId=" + this.id);
+    OpenDialog("/Movie/" + this.id + "/GetMovie");
 });
 
 //autocomplete
@@ -42,65 +42,129 @@ $('#movieSearch').autocomplete({
         });
     },
     select: function(event, ui){
-        OpenDialog("/Movie/GetMovie?movieId=" + ui.item.value) ;
+        OpenDialog("/Movie/" + ui.item.value + "/GetMovie");
     }
 });
 
 //confirm deletion
-$('[data-confirm]').click(function (e) {
-    if (!confirm($(this).attr("data-confirm"))) {
-        e.preventDefault();
-    }
-});
+//$('[data-confirm]').click(function (e) {
+//    if (!confirm($(this).attr("data-confirm"))) {
+//        e.preventDefault();
+//    }
+//});
 
+var DeleteUser = function(userId)
+{
+    var options = { "backdrop": "static", keyboard: true };
+    $.ajax({
+        url: "/Account/IsCurrentUser?userId=" + userId,
+        dataType: 'json',
+        type: 'GET',
+        success: function (data) {
+            if(!data)
+            {
+                if (confirm($("[name=deleteUser]").attr("data-confirm"))) {
+                    //call controller delete
+                    $.ajax({
+                        url: "/Account/" + userId + "/Delete?userId=",
+                        dataType: 'json',
+                        type: 'GET',
+                        success: function (data) {
+                            window.location = data;
+                        }
+                    });
+                }
+            }
+            else
+            {
+                alert("Can't delete current user")
+            }
+        }
+    });
+};
 
-//field validation via jquery
-
-$("#createGenre, #editGenre").click(function (e) {
-    var genreName = $("#genreName").val();
-    if($.trim(genreName) == '')
+var DeleteGenre = function (genreId, movieCount) {
+    if(movieCount == 0)
     {
-        alert("Missing Name");
-        e.preventDefault();
+        if (confirm($("[name=deleteGenre]").attr("data-confirm"))) {
+            //call controller delete
+            $.ajax({
+                url: "/Genre/" + genreId + "/Delete",
+                dataType: 'json',
+                type: 'GET',
+                success: function (data) {
+                    window.location = data;
+                }
+            });
+        }
     }
-});
-
-$("#createMovie, #editMovie").click(function (e) {
-    var movieName = $("#movieTitle").val();
-    var movieYear = $("#movieYear").val();
-    if ($.trim(movieName) == '') {
-        alert("Missing Title");
-        e.preventDefault();
-    }
-    else if (movieYear == 0)
+    else
     {
-        alert("Missing Year");
-        e.preventDefault();
+        alert("Genre must not have any movies to be deleted")
     }
+};
+
+var DeleteMovie = function (movieId) {
+    if (confirm($("[name=deleteMovie]").attr("data-confirm"))) {
+        //call controller delete
+        $.ajax({
+            url: "/Movie/" + movieId + "/Delete",
+            dataType: 'json',
+            type: 'GET',
+            success: function (data) {
+                window.location = data;
+            }
+        });
+    }
+};
+
+//$("#editMovie, #createMovie").click(function (e) {
+//    var movieId = $("#movieId").val();
+//    var movieTitle = $("#movieTitle").val();
+//    var movieYear = $("#movieYear").val()
+//    $.ajax({
+//        url: "/Movie/MovieCheck?id=" + movieId + "&title=" + movieTitle + "&year=" + movieYear,
+//        dataType: 'json',
+//        type: 'GET',
+//        success: function (data) {
+//            if (!data) {
+//                alert("Taken");
+//                $("errormsg").val(movieTitle + " (" + movieYear + ") already exists");
+//                e.preventDefault();
+//            }
+//            else {
+//                $("errormsg").val("")
+//            }
+//        }
+//    });
+//});
+var validMovie = true;
+$("#movieTitle, #movieYear").on('input', function (e) {
+    var movieId = $("#movieId").val();
+    var movieTitle = $("#movieTitle").val();
+    var movieYear = $("#movieYear").val()
+    $.ajax({
+        url: "/Movie/MovieCheck?id=" + movieId + "&title=" + movieTitle + "&year=" + movieYear,
+        dataType: 'json',
+        type: 'GET',
+        success: function (data) {
+            if (!data) {
+                //alert("Taken");
+                validMovie = false;
+                $("#errormsg").text(movieTitle + " (" + movieYear + ") already exists");
+                e.preventDefault();
+            }
+            else {
+                $("#errormsg").text("")
+                validMovie = true;
+            }
+        }
+    });
 });
 
-$("#editUser").click(function (e) {
-    var username = $("#username").val();
-    if ($.trim(username) == '') {
-        alert("Missing Username");
-        e.preventDefault();
-    }
-    else if(password.length > 0 && $.trim(password) == '')
+$("#editMovie, #createMovie").click(function (e) {
+    if(!validMovie)
     {
-        alert("Missing Password");
-        e.preventDefault();
-    }
-});
-
-$("#createUser").click(function (e) {
-    var username = $("#username").val();
-    var password = $("#password").val();
-    if ($.trim(username) == '') {
-        alert("Missing Username");
-        e.preventDefault();
-    }
-    else if ($.trim(password) == '') {
-        alert("Missing password");
         e.preventDefault();
     }
 });

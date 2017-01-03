@@ -13,6 +13,27 @@ namespace MovieApp
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapRoute(
+            //    name: "Movie",
+            //    url: "Movie/{id}/{action}",
+            //    defaults: new { controller = "Movie"}
+            //    );
+            //routes.MapRoute(
+            //    name: "Genre",
+            //    url: "Genre/{id}/{action}",
+            //    defaults: new { controller = "Genre"}
+            //    );
+            //routes.MapRoute(
+            //    name: "User",
+            //    url: "Account/{id}/{action}",
+            //    defaults: new { controller = "Account"}
+            //    );
+
+            routes.MapRoute(
+                name: "Route",
+                url: "{controller}/{id}/{action}"
+                );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

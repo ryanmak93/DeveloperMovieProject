@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>Manage</h2>
+
+@Html.ActionLink("Manage Movies", "Manage", "Movie", null, new { Style = "font-size:20px;" })
+<br /><br />
+@Html.ActionLink("Manage Genres", "Manage", "Genre", null, new { Style = "font-size:20px;" })
+<br /><br />
+@Html.ActionLink("Manage Users", "Manage", "Account", null, new { Style = "font-size:20px;" })
+<br /><br />
+@Html.ActionLink("Reset and Populate Database", "ResetDatabase", "Movie", null,
+    new { onclick = "return confirm('This will erase all rows in database and replace it with test data. Would you like to continue?')", Style = "color:red;font-size:20px; " })
+
+

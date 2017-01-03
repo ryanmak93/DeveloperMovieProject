@@ -5,7 +5,7 @@
 
     @foreach (var genre in Model.Genres.ToList())
     {
-        <h4>@Html.ActionLink(@genre.Name, "GenreAll", "Movie", new { name = @genre.Name }, new { Class = "genreLink" })</h4>
+        <h4>@Html.ActionLink(@genre.Name, "All", "Genre", new { id = @genre.Id }, null)</h4>
     }
 </div>
 <input type="button" value="Close" onclick="CloseDialog()" />

@@ -14,6 +14,10 @@ namespace MovieApp
             bundles.Add(new ScriptBundle("~/bundles/jquery-intellisense").Include(
                         "~/Scripts/jquery-{version}.intellisense.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
+                        "~/Scripts/jquery.validate.js"));
+            bundles.Add(new ScriptBundle("~/bundles/jqueryvalob").Include(
+                        "~/Scripts/jquery.validate.unobtrusive.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
                         "~/Scripts/jquery-ui-{version}.js"));

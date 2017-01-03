@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MovieApp.Models;
+using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MovieApp.Controllers
 {
@@ -17,9 +19,84 @@ namespace MovieApp.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+        public ActionResult UserCheck(string Username, string id)
+        {
+            if(id == null)
+                return Json(!userManager.Users.Any(u => u.UserName == Username), JsonRequestBehavior.AllowGet);
+            return Json(!userManager.Users.Any(u => u.UserName == Username && u.Id != id), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult IsCurrentUser(string userId)
+        {
+            return Json(User.Identity.GetUserId() == userId, JsonRequestBehavior.AllowGet);
+        } 
+
+        public ActionResult Manage()
+        {
+            return View(userManager.Users.ToList());
+        }
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create(ApplicationUser user, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await userManager.CreateAsync(user, password);
+                TempData["Success"] = user.UserName + " created";                
+            }
+            return RedirectToAction("Manage");
+        }
+
+        [HttpGet]
+        public ActionResult Edit(string id)
+        {
+            var user = userManager.FindById(id);
+            var viewmodel = new UserEditViewModel
+            {
+                Id = id,
+                Username = user.UserName,
+                Password = ""
+            };
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ApplicationUser user, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser olduser = userManager.FindById(user.Id);
+                olduser.UserName = user.UserName;
+                if (password.Length != 0)
+                    olduser.PasswordHash = userManager.PasswordHasher.HashPassword(password);
+                userManager.Update(olduser);
+                TempData["Success"] = user.UserName + " updated";
+            }
+            RouteData.Values.Remove("id");
+            return RedirectToAction("Manage");
+        }
+
+        public ActionResult Delete(string id)
+        {
+            ApplicationUser user = userManager.FindById(id);
+            userManager.Delete(user);            
+            TempData["Success"] = user.UserName + " deleted";
+            RouteData.Values.Remove("id");
+            return Json(Url.Action("Manage", "Account"), JsonRequestBehavior.AllowGet);
+        }
+
 
         public AccountController()
         {
+            userManager.PasswordValidator = new PasswordValidator() { RequiredLength = 1 };
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -422,6 +499,7 @@ namespace MovieApp.Controllers
 
             base.Dispose(disposing);
         }
+
 
         #region Helpers
         // Used for XSRF protection when adding external logins

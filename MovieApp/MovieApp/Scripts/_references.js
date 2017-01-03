@@ -1,6 +1,4 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="../javascript/genre.js" />
-/// <reference path="../javascript/movie.js" />
 /// <reference path="ai.0.15.0-build58334.min.js" />
 /// <reference path="autocomplete.js" />
 /// <reference path="bootstrap.js" />

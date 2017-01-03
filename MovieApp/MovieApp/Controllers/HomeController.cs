@@ -26,5 +26,11 @@ namespace MovieApp.Controllers
 
             return View();
         }
+        [Authorize]
+        public ActionResult Manage()
+        {
+            return View();
+        }
     }
+
 }
