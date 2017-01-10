@@ -64,16 +64,18 @@ namespace MovieApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Movie movie, string[] SelectedGenres)
+        public ActionResult Create(Movie movie, string[] selectedGenres)
         {
             if (ModelState.IsValid) //check if movie already exists
             {
                 movie.Genres = new List<Genre>();
-                if (SelectedGenres != null)
-                    movie.Genres = db.Genres.Where(g => SelectedGenres.Contains(g.Id.ToString())).ToList();
+                if (selectedGenres != null)
+                    movie.Genres = db.Genres.Where(g => selectedGenres.Contains(g.Id.ToString())).ToList();
+
                 db.Movies.Add(movie);
                 db.SaveChanges();
-                TempData["Success"] = String.Format("{0} ({1}) created", movie.Title, movie.Year);
+
+                TempData["Success"] = $"{movie.Title} ({movie.Year}) created";
             }
             return RedirectToAction("Manage");
         }
@@ -87,19 +89,22 @@ namespace MovieApp.Controllers
             return View(movie);
         }
 
-        public ActionResult Edit(Movie movie, string[] SelectedGenres)
+        public ActionResult Edit(Movie movie, string[] selectedGenres)
         {
             if (ModelState.IsValid)
             {
                 Movie oldmovie = db.Movies.First(m => movie.Id == m.Id); //get old movie information
 
                 //update movie in database 
+
                 oldmovie.Title = movie.Title;
                 oldmovie.Year = movie.Year;
-                UpdateMovieGenres(oldmovie, SelectedGenres); //add selected genres to movie's genres
+
+                UpdateMovieGenres(oldmovie, selectedGenres); //add selected genres to movie's genres
                 db.Entry(oldmovie).State = EntityState.Modified;
                 db.SaveChanges(); 
-                TempData["Success"] = String.Format("{0} ({1}) updated", movie.Title, movie.Year);
+
+                TempData["Success"] = $"{movie.Title} ({movie.Year}) updated";
             }
             RouteData.Values.Remove("id"); //remove route value from url
             return RedirectToAction("Manage");
@@ -108,11 +113,15 @@ namespace MovieApp.Controllers
         public ActionResult Delete(int id)
         {
             Movie movie = db.Movies.First(m => id == m.Id);
+
             db.Movies.Attach(movie);
             db.Movies.Remove(movie);
             db.SaveChanges();
-            TempData["Success"] = String.Format("{0} ({1}) deleted", movie.Title, movie.Year);
+
+            TempData["Success"] = $"{movie.Title} ({movie.Year}) deleted";
+
             RouteData.Values.Remove("id"); //remove route value from url
+
             return Json(Url.Action("Manage", "Movie"), JsonRequestBehavior.AllowGet); //return to manage page via javascript
         }
 
@@ -131,15 +140,15 @@ namespace MovieApp.Controllers
         }
 
         //takes all the selected genres as id strings and updats the movie's genres
-        private void UpdateMovieGenres(Movie movie, string[] SelectedGenres)
+        private void UpdateMovieGenres(Movie movie, string[] selectedGenres)
         {
             //make a new, empty list if no movies were chosen
-            if (SelectedGenres == null)
+            if (selectedGenres == null)
             {
                 movie.Genres.Clear();
                 return;
             }
-            var selected = new HashSet<int>(SelectedGenres.Select(int.Parse).ToList());
+            var selected = new HashSet<int>(selectedGenres.Select(int.Parse).ToList());
             //add new selected movies and remove deselected ones
             movie.Genres = movie.Genres.Union(db.Genres.Where(g => selected.Contains(g.Id))).Except(db.Genres.Where(g => !selected.Contains(g.Id))).ToList();
         }

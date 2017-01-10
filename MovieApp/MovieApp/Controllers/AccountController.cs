@@ -74,10 +74,12 @@ namespace MovieApp.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser olduser = userManager.FindById(user.Id);
+
                 olduser.UserName = user.UserName;
                 if (password.Length != 0)
                     olduser.PasswordHash = userManager.PasswordHasher.HashPassword(password);
                 userManager.Update(olduser);
+
                 TempData["Success"] = user.UserName + " updated";
             }
             RouteData.Values.Remove("id");
@@ -87,9 +89,12 @@ namespace MovieApp.Controllers
         public ActionResult Delete(string id)
         {
             ApplicationUser user = userManager.FindById(id);
-            userManager.Delete(user);            
+            userManager.Delete(user);          
+              
             TempData["Success"] = user.UserName + " deleted";
+
             RouteData.Values.Remove("id");
+
             return Json(Url.Action("Manage", "Account"), JsonRequestBehavior.AllowGet);
         }
 

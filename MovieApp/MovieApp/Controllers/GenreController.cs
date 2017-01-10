@@ -52,15 +52,17 @@ namespace MovieApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Genre genre, string[] SelectedMovies)
+        public ActionResult Create(Genre genre, string[] selectedMovies)
         {
             if (ModelState.IsValid)
             {
                 genre.Movies = new List<Movie>();
-                if(SelectedMovies != null)
-                    genre.Movies = db.Movies.Where(m => SelectedMovies.Contains(m.Id.ToString())).ToList();
+                if(selectedMovies != null)
+                    genre.Movies = db.Movies.Where(m => selectedMovies.Contains(m.Id.ToString())).ToList();
+
                 db.Genres.Add(genre);
                 db.SaveChanges();
+
                 TempData["Success"] = genre.Name + " created";
             }
             return RedirectToAction("Manage");
@@ -75,7 +77,7 @@ namespace MovieApp.Controllers
             return View(genre);
         }
 
-        public ActionResult Edit(Genre genre, string[] SelectedMovies)
+        public ActionResult Edit(Genre genre, string[] selectedMovies)
         {
             if (ModelState.IsValid)
             {
@@ -83,23 +85,29 @@ namespace MovieApp.Controllers
 
                 //update genre info
                 oldgenre.Name = genre.Name;
-                UpdateGenreMovies(oldgenre, SelectedMovies); //update genre's movies
+                UpdateGenreMovies(oldgenre, selectedMovies); //update genre's movies
                 db.Entry(oldgenre).State = EntityState.Modified;
                 db.SaveChanges();
+
                 TempData["Success"] = genre.Name + " updated";
             }
             RouteData.Values.Remove("id"); //remove route value from url
+
             return RedirectToAction("Manage"); 
         }
 
         public ActionResult Delete(int id)
         {
             Genre genre = db.Genres.First(g => g.Id == id);
+
             db.Genres.Attach(genre);
             db.Genres.Remove(genre);
             db.SaveChanges();
+
             TempData["Success"] = genre.Name + " deleted";
+
             RouteData.Values.Remove("id");  //remove route value from url
+
             return Json(Url.Action("Manage", "Genre"), JsonRequestBehavior.AllowGet); //return to manage page via javascript
         }
 
@@ -118,16 +126,16 @@ namespace MovieApp.Controllers
         }
 
         //takes all the selected movies as id strings and updates the genre's movies
-        private void UpdateGenreMovies(Genre genre, string[] SelectedMovies)
+        private void UpdateGenreMovies(Genre genre, string[] selectedMovies)
         {
             //make a new, empty list if no genres were chosen
-            if (SelectedMovies == null)
+            if (selectedMovies == null)
             {
                 genre.Movies.Clear();
                 return;
             }
 
-            var selected = new HashSet<int>(SelectedMovies.Select(int.Parse).ToList());
+            var selected = new HashSet<int>(selectedMovies.Select(int.Parse).ToList());
             genre.Movies = genre.Movies.Union(db.Movies.Where(m => selected.Contains(m.Id))).Except(db.Movies.Where(m => !selected.Contains(m.Id))).ToList();
         }
 
