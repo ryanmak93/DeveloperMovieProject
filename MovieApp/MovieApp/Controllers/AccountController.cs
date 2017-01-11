@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,7 +6,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MovieApp.Models;
-using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MovieApp.Controllers
@@ -23,9 +19,8 @@ namespace MovieApp.Controllers
 
         public ActionResult UserCheck(string Username, string id)
         {
-            if(id == null)
-                return Json(!userManager.Users.Any(u => u.UserName == Username), JsonRequestBehavior.AllowGet);
-            return Json(!userManager.Users.Any(u => u.UserName == Username && u.Id != id), JsonRequestBehavior.AllowGet);
+            return id == null ? Json(!userManager.Users.Any(u => u.UserName == Username), JsonRequestBehavior.AllowGet) 
+                : Json(!userManager.Users.Any(u => u.UserName == Username && u.Id != id), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult IsCurrentUser(string userId)
@@ -73,7 +68,7 @@ namespace MovieApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser olduser = userManager.FindById(user.Id);
+                var olduser = userManager.FindById(user.Id);
 
                 olduser.UserName = user.UserName;
                 if (password.Length != 0)
@@ -88,7 +83,7 @@ namespace MovieApp.Controllers
 
         public ActionResult Delete(string id)
         {
-            ApplicationUser user = userManager.FindById(id);
+            var user = userManager.FindById(id);
             userManager.Delete(user);          
               
             TempData["Success"] = user.UserName + " deleted";

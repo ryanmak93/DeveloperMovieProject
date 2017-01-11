@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Security;
-using System.Web;
 using System.Web.Mvc;
 using MovieApp.Context;
 using MovieApp.Models;
 using System.Data.Entity;
-using Microsoft.AspNet.Identity;
 
 namespace MovieApp.Controllers
 {
@@ -22,14 +18,13 @@ namespace MovieApp.Controllers
 
         public ActionResult MovieCheck(string title, string year, string id)
         {
-            if (id == "undefined")
-                return Json(!db.Movies.Any(m => m.Title == title && m.Year.ToString() == year), JsonRequestBehavior.AllowGet);
-            return Json(!db.Movies.Any(m => m.Title == title && m.Year.ToString() == year && m.Id.ToString() != id), JsonRequestBehavior.AllowGet);
+            return id == "undefined" ? Json(!db.Movies.Any(m => m.Title == title && m.Year.ToString() == year), JsonRequestBehavior.AllowGet) 
+                : Json(!db.Movies.Any(m => m.Title == title && m.Year.ToString() == year && m.Id.ToString() != id), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetMovie(int id) // get information for movie given id
         {
-            Movie movie = db.Movies.First(m => m.Id == id);
+            var movie = db.Movies.First(m => m.Id == id);
             return PartialView(movie);
         }
 
@@ -84,7 +79,7 @@ namespace MovieApp.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
-            Movie movie = db.Movies.First(m => m.Id == id);
+            var movie = db.Movies.First(m => m.Id == id);
             PopulateGenres(movie);
             return View(movie);
         }
@@ -93,7 +88,7 @@ namespace MovieApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                Movie oldmovie = db.Movies.First(m => movie.Id == m.Id); //get old movie information
+                var oldmovie = db.Movies.First(m => movie.Id == m.Id); //get old movie information
 
                 //update movie in database 
 
@@ -112,7 +107,7 @@ namespace MovieApp.Controllers
 
         public ActionResult Delete(int id)
         {
-            Movie movie = db.Movies.First(m => id == m.Id);
+            var movie = db.Movies.First(m => id == m.Id);
 
             db.Movies.Attach(movie);
             db.Movies.Remove(movie);
@@ -170,7 +165,7 @@ namespace MovieApp.Controllers
 
         private void AddTestData()
         {
-            List<string> genreNames = new List<string> { "Action", "Adventure", "Romance", "Comedy", "SciFi", "Horror", "Fantasy", "Sports" };
+            var genreNames = new List<string> { "Action", "Adventure", "Romance", "Comedy", "SciFi", "Horror", "Fantasy", "Sports" };
             foreach (var name in genreNames)
                 db.Genres.Add(new Genre { Name = name });
 
